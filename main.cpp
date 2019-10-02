@@ -147,9 +147,16 @@ int main(int argc, char *argv[])
     ms->show();
 
 
-
-
-
+    if(DEBUG)
+    {
+        QPushButton *pb0 = new QPushButton(ms);
+        pb0->move(0,0);
+        pb0->resize(200,200);
+        pb0->setText("close app");
+        a.connect(pb0,SIGNAL(clicked(bool)),&a,SLOT(closeAllWindows()));
+        pb0->show();
+        pb0->raise();
+    }
 
     return a.exec();
 
