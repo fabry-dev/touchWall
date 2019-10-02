@@ -19,8 +19,12 @@ public:
     void loadFile(QString);
     void setLoop(bool looping);
     void stop();
+    void play();
     void setCrop();
     void loadFilePaused(QString videoFile);
+    unsigned int getId() const;
+    void setId(unsigned int value);
+
 signals:
     void durationChanged(int value);
     void positionChanged(int value);
@@ -37,6 +41,7 @@ private Q_SLOTS:
 private:
     void handle_mpv_event(mpv_event *event);
     static void on_update(void *ctx);
+    unsigned int id;
 
     mpv::qt::Handle mpv;
     mpv_opengl_cb_context *mpv_gl;

@@ -16,7 +16,8 @@ static void *get_proc_address(void *ctx, const char *name) {
     return (void *)glctx->getProcAddress(QByteArray(name));
 }
 
-mpvWidget::mpvWidget(QWidget *parent, Qt::WindowFlags f):QOpenGLWidget(parent, f)
+mpvWidget::mpvWidget(QWidget *parent, Qt::WindowFlags f)
+    : QOpenGLWidget(parent, f)
 {
 
     setlocale(LC_NUMERIC, "C");
@@ -24,8 +25,8 @@ mpvWidget::mpvWidget(QWidget *parent, Qt::WindowFlags f):QOpenGLWidget(parent, f
     if (!mpv)
         throw std::runtime_error("could not create mpv context");
 
-    //mpv_set_option_string(mpv, "terminal", "yes");
-    //mpv_set_option_string(mpv, "msg-level", "all=v");
+    //  mpv_set_option_string(mpv, "terminal", "yes");
+    //  mpv_set_option_string(mpv, "msg-level", "all=v");
     if (mpv_initialize(mpv) < 0)
         throw std::runtime_error("could not initialize mpv context");
 
@@ -161,7 +162,7 @@ void mpvWidget::handle_mpv_event(mpv_event *event)
     case MPV_EVENT_IDLE:
     {
 
-
+        emit videoOver();
         break;
     }
     case MPV_EVENT_PROPERTY_CHANGE: {
@@ -208,6 +209,16 @@ void mpvWidget::maybeUpdate()
 void mpvWidget::on_update(void *ctx)
 {
     QMetaObject::invokeMethod((mpvWidget*)ctx, "maybeUpdate");
+}
+
+unsigned int mpvWidget::getId() const
+{
+    return id;
+}
+
+void mpvWidget::setId(unsigned int value)
+{
+    id = value;
 }
 
 

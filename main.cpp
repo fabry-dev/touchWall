@@ -5,7 +5,7 @@
 #include "mainscreen.h"
 #include "qdebug.h"
 #include "QPushButton"
-
+#include "qmessagebox.h"
 
 
 #define PATH_DEFAULT (QString)"/home/fred/Dropbox/Taf/Cassiopee/walls/files/"
@@ -30,7 +30,8 @@ int main(int argc, char *argv[])
     bool HIDE_CURSOR=false;
     bool DEBUG=false;
     unsigned int videoCount= 0;
-    std::vector<unsigned int> vpWidths,vpHeights,vpXs,vpYs;
+    unsigned int buttonDiameter = 50;
+    std::vector<unsigned int> vpWidths,vpHeights,vpXs,vpYs,buttonXs,buttonYs;
 
 
     QFile file(PATH+"config.cfg");
@@ -90,7 +91,23 @@ int main(int argc, char *argv[])
                     for(auto s:buf)
                         vpYs.push_back(s.toInt());
                 }
+                else if(paramName=="buttonX")
+                {
+                    QStringList buf = paramValue.split(",");
+                    for(auto s:buf)
+                        buttonXs.push_back(s.toInt());
+                }
+                else if(paramName=="buttonY")
+                {
+                    QStringList buf = paramValue.split(",");
+                    for(auto s:buf)
+                        buttonYs.push_back(s.toInt());
+                }
+                else if(paramName == "buttonDiameter")
+                {
+                    buttonDiameter = paramValue.toInt();
 
+                }
 
                 else
                     qDebug()<<paramName<<" - "<<paramValue;
@@ -127,15 +144,26 @@ int main(int argc, char *argv[])
     if((vpWidths.size()!=videoCount)
      ||(vpHeights.size()!=videoCount)
      ||(vpXs.size()!=videoCount)
-     ||(vpYs.size()!=videoCount))
+     ||(vpYs.size()!=videoCount)
+     ||(buttonXs.size()!=videoCount)
+     ||(buttonYs.size()!=videoCount))
     {
-        qDebug()<<"Video count ERROR, closing APP";
+        qDebug()<<"Video & button parameters count mismatch. Check config.cfg. Closing APP";
+
+
+        QMessageBox msgBox;
+        msgBox.setText("Video & button parameters count mismatch. Check config.cfg. Closing APP now.");
+        //msgBox.setInformativeText("Do you want to save your changes?");
+        //msgBox.setStandardButtons(QMessageBox::Save | QMessageBox::Discard | QMessageBox::Cancel);
+        //msgBox.setDefaultButton(QMessageBox::Save);
+        int ret = msgBox.exec();
+
         exit(0);
     }
 
 
 
-    mainScreen * ms = new mainScreen(NULL,PATH,vpWidths,vpHeights,vpXs,vpYs);
+    mainScreen * ms = new mainScreen(NULL,PATH,DEBUG,vpWidths,vpHeights,vpXs,vpYs,buttonXs,buttonYs,buttonDiameter);
 
     uint screenNumber = 1;
 
