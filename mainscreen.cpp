@@ -19,7 +19,7 @@ mainScreen::mainScreen(QLabel *parent, QString PATH,bool DEBUG,std::vector<unsig
 
     savingTimer = new QTimer(this);
     savingTimer->setSingleShot(true);
-    savingTimer->setInterval(10000);
+    savingTimer->setInterval(10);
     connect(savingTimer,SIGNAL(timeout()),this,SLOT(goSavingScreen()));
     savingTimer->start();
 
